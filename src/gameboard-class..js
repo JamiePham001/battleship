@@ -1,3 +1,5 @@
+import { Ship } from "./ship-class";
+
 export class Gameboard {
   constructor() {
     this.board = Array(10)
@@ -63,6 +65,7 @@ export class Gameboard {
       this.board[placeY][placeX] = {
         ship,
         position: i,
+        hit: false,
       };
     }
 
@@ -73,37 +76,66 @@ export class Gameboard {
   attack(row, col) {
     // coordinates will be the value held by the clickable DOM
     if (this.board[row][col] === null) {
-      this.board[row][col] === "miss";
-      return false;
+      this.board[row][col] = "miss";
+      return 0;
     } else {
-      this.board[row][col] === "hit";
-      cell.ship.hit();
-      if (cell.ship.isSunk()) {
+      this.board[row][col].hit = true;
+      this.board[row][col].ship.hit();
+      this.board[row][col].ship.isSunk();
+      if (this.board[row][col].ship.sunk === true) {
         this.sunkShips++;
         this.checkWinner();
-        return true;
+
+        // dom manipulation to show a ship was sunk
+        return 2;
       }
       // hit
-      return false;
+      return 1;
     }
   }
 
   checkWinner() {
     if (this.sunkShips === this.ships.length) {
+      console.log("someone won");
       return true;
     }
     return false;
   }
 
-  generateBoard() {
-    //   parentDiv.innerHtml = ""
+  generateBoard(parentDiv, shipCount, message, showBoats = false) {
+    parentDiv.innerHTML = "";
+    shipCount.innerHTML = "";
     this.board.forEach((element, rowIndex) => {
       const rowDiv = document.createElement("div");
       rowDiv.className = "row";
 
-      rowindex.forEach((element, cellIndex) => {
+      element.forEach((cell, cellIndex) => {
         const cellDiv = document.createElement("div");
         cellDiv.className = "cell";
+
+        // colour cells appropriately
+        if (cell?.ship instanceof Ship) {
+          if (showBoats === true) {
+            cellDiv.style.backgroundColor = "gray";
+          }
+          if (cell?.ship.sunk === true) {
+            cellDiv.style.backgroundColor = "salmon";
+          }
+        }
+
+        if (cell !== null) {
+          if (cell.hit === true || cell === "miss") {
+            cellDiv.innerHTML = "o";
+            cellDiv.classList.add("miss");
+          }
+          if (cell.hit === true) {
+            cellDiv.innerHTML = "x";
+            cellDiv.classList.add("hit");
+          }
+        }
+
+        // ship count
+        shipCount.innerHTML = this.ships.length - this.sunkShips;
 
         cellDiv.dataset.row = rowIndex;
         cellDiv.dataset.col = cellIndex;
@@ -113,12 +145,38 @@ export class Gameboard {
           const clickedRow = cellDiv.dataset.row;
           const clickedCol = cellDiv.dataset.col;
 
-          this.attack(clickedRow, clickedCol);
+          const attackOut = this.attack(clickedRow, clickedCol, message);
+          this.messaging(attackOut, message);
+          this.generateBoard(parentDiv, shipCount, message);
+          console.log(this.board);
         });
 
         rowDiv.appendChild(cellDiv);
       });
-      //   parentDiv.appendChild(rowDiv)
+      parentDiv.appendChild(rowDiv);
     });
   }
+
+  messaging(attackOutput, message) {
+    message.innerHTML = "";
+    // miss
+    if (attackOutput === 0) {
+      message.innerHTML = "you missed!";
+      return;
+    }
+
+    // hit
+    if (attackOutput === 1) {
+      message.innerHTML = "you hit a ship!";
+      return;
+    }
+
+    // sink
+    if (attackOutput === 2) {
+      message.innerHTML = "you sunk a ship!";
+      return;
+    }
+  }
+
+  botChoice() {}
 }

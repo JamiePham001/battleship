@@ -47,8 +47,8 @@ module.exports = {
 };
 ```
 
-
 settings.josn addon settngs for eslint
+
 ```
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": "explicit"
@@ -68,3 +68,7 @@ settings.josn addon settngs for eslint
     "eslint.run": "onSave",
     "editor.formatOnSave": true
 ```
+
+npx webpack
+npm install dotenv-webpack
+npm install --save-dev @babel/core @babel/preset-env babel-jest

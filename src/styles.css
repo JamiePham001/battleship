@@ -1,3 +1,115 @@
 body {
-  background-color: black;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.title {
+  width: 100%;
+  height: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 45px;
+  font-weight: bold;
+  border-bottom: 2px solid black;
+}
+
+.battleship-container {
+  /* background-color: red; */
+  width: 100%;
+  height: 90%;
+  display: flex;
+  justify-content: center;
+}
+
+.player-container {
+  /* background-color: green; */
+  width: 50%;
+  height: 100%;
+}
+
+.bot-container {
+  /* background-color: orange; */
+  width: 50%;
+  height: 100%;
+  border-left: 2px solid black;
+}
+
+.player-container,
+.bot-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.player-board,
+.bot-board {
+  background-color: white;
+  width: 60%;
+  height: 60%;
+  border: 1px solid black;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.row {
+  height: 10%;
+  width: 100%;
+  display: flex;
+}
+
+.cell {
+  height: 100%;
+  width: 10%;
+  border: 1px solid black;
+}
+
+.player-board .cell {
+  cursor: pointer;
+  background-color: white;
+}
+
+.player-board .cell:hover {
+  background-color: lightgray;
+}
+
+.bot-board .cell {
+  pointer-events: none;
+}
+
+.miss {
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40px;
+}
+
+.hit {
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: red;
+  font-size: 40px;
+}
+
+.sunk {
+  background-color: salmon;
+}
+
+.player-name,
+.bot-name {
+  font-size: 30px;
+}
+
+.ship-counter {
+  display: flex;
 }
