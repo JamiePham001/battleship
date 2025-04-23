@@ -84,7 +84,6 @@ export class Gameboard {
       this.board[row][col].ship.isSunk();
       if (this.board[row][col].ship.sunk === true) {
         this.sunkShips++;
-        this.checkWinner();
 
         // dom manipulation to show a ship was sunk
         return 2;
@@ -92,14 +91,6 @@ export class Gameboard {
       // hit
       return 1;
     }
-  }
-
-  checkWinner() {
-    if (this.sunkShips === this.ships.length) {
-      console.log("someone won");
-      return true;
-    }
-    return false;
   }
 
   generateBoard(parentDiv, shipCount, message, showBoats = false) {
@@ -148,7 +139,6 @@ export class Gameboard {
           const attackOut = this.attack(clickedRow, clickedCol, message);
           this.messaging(attackOut, message);
           this.generateBoard(parentDiv, shipCount, message);
-          console.log(this.board);
         });
 
         rowDiv.appendChild(cellDiv);
@@ -178,5 +168,60 @@ export class Gameboard {
     }
   }
 
-  botChoice() {}
+  botChoice(playerBoard, playerShipCount, message) {
+    const random = (min, max) => {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    };
+
+    let row = random(0, 9);
+    let col = random(0, 9);
+
+    let maxTries = 0;
+
+    while (true) {
+      if (this.board?.[row]?.[col] === null) {
+        maxTries++;
+        const botAttack = this.attack(row, col);
+        this.messaging(botAttack, message);
+        this.generateBoard(playerBoard, playerShipCount, message, true);
+        break;
+      }
+
+      if (this.board?.[row]?.[col] === "miss") {
+        row = random(0, 9);
+        col = random(0, 9);
+        continue;
+      }
+
+      if (this.board?.[row]?.[col]?.ship instanceof Ship) {
+        if (this.board[row][col].hit === true) {
+          row = random(0, 9);
+          col = random(0, 9);
+          continue;
+        } else if (this.board?.[row]?.[col]?.hit === false) {
+          maxTries++;
+          const botAttack = this.attack(row, col);
+          this.messaging(botAttack, message);
+          this.generateBoard(playerBoard, playerShipCount, message, true);
+          break;
+        }
+      }
+
+      // max attempts reached
+      if (maxTries >= 100) {
+        break;
+      }
+    }
+  }
+
+  restart() {
+    // generate clear board
+    this.board = Array(10)
+      .fill()
+      .map(() => Array(10).fill(null));
+    this.ships = [];
+    this.sunkShips = 0;
+
+    this.placeShipsRandomly();
+  }
 }

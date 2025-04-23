@@ -1,74 +1,77 @@
-This template is exclusively for frontend projects only and wont work for projects working with react
+# Battleship Game
 
-Installation Guide
+A modern frontend JavaScript implementation of the classic Battleship game featuring player vs computer gameplay with randomized ship placement.
 
-ESLint with Airbnb JavaScript Style:
+## Features
 
-```
-npx install-peerdeps --dev eslint-config-airbnb
-```
+- **Player vs Computer Gameplay**: Human player battles against an AI opponent
+- **Randomized Ship Placement**: Ships are placed randomly at game start
+- **Visual Feedback**: Color-coded cells show hits, misses, and sunk ships
+- **Ship Tracking**: Displays remaining ships for both players
+- **Auto-Restart**: Game automatically resets after a winner is determined
 
-Create an ESLint config file in the root of the project:
+## Game Components
 
-```
-npx eslint --init
-```
+### Ship Class
 
-Install eslint-config-prettier to fix clashing between Airbnb js style and prettier:
+- Tracks ship length, hit count, and sunk status
+- Methods:
+  - `hit()`: Increments hit counter
+  - `isSunk()`: Checks if ship is sunk based on hits vs length
 
-```
-Install eslint-config-prettier:
-```
+### Gameboard Class
 
-Install Babel
+- Manages 10x10 game board state
+- Key Methods:
+  - `placeShipsRandomly()`: Randomly places ships with collision detection
+  - `attack(row, col)`: Processes attacks (returns 0=miss, 1=hit, 2=sunk)
+  - `generateBoard()`: Renders the board to DOM
+  - `botChoice()`: AI logic for selecting attack coordinates
 
-```
-npm install -D babel-loader @babel/core @babel/preset-env webpack
-```
+### Player Class
 
-install package to store api key:
+- Extends Gameboard with player-specific functionality
+- Includes name property for player identification
 
-```
-npm install dotenv-webpack
-```
+## How to Play
 
-Import export files outside of the index folder
-install Bable
+1. The game automatically places ships for both players
+2. Click on the bot's board to attack a coordinate
+3. The bot will automatically counter-attack
+4. Game continues until all ships of one player are sunk
+5. Winner is announced and game resets after 5 seconds
 
-```
-npm install --save-dev @babel/core @babel/preset-env babel-jest
-```
+## Technical Details
 
-Create babel.config.js:
+- **Board Representation**:
 
-```
-module.exports = {
-  presets: [['@babel/preset-env', {targets: {node: 'current'}}]],
-};
-```
+  - 2D array (10x10) storing cell states
+  - `null` = empty water
+  - `{ ship, position, hit }` = ship segment
+  - `"miss"` = missed attack
 
-settings.josn addon settngs for eslint
+- **AI Logic**:
 
-```
-    "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": "explicit"
-    },
-    "eslint.validate": [
-        "javascript",
-        "javascriptreact",
-        "typescript",
-        "typescriptreact"
-    ],
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "[javascript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "eslint.format.enable": true,
-    "eslint.experimental.useFlatConfig": true,
-    "eslint.run": "onSave",
-    "editor.formatOnSave": true
-```
+  - Random coordinate selection with validation
+  - Avoids re-attacking same spots
+  - Limited to 100 attempts to prevent infinite loops
 
-npx webpack
-npm install dotenv-webpack
-npm install --save-dev @babel/core @babel/preset-env babel-jest
+- **DOM Interaction**:
+  - Dynamic board generation
+  - Visual feedback for hits/misses/sunk ships
+  - Ship counter updates in real-time
+
+## Setup
+
+1. Clone repository
+2. Open `index.html` in browser
+3. No dependencies required - runs with vanilla JavaScript
+
+## Code Structure
+
+battleship/
+├── index.html # Main HTML file
+├── styles.css # Game styling
+├── ship-class.js # Ship class implementation
+├── gameboard-class.js # Gameboard logic
+└── player-class.js # Player class extending Gameboard
