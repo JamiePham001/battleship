@@ -75,3 +75,8 @@ battleship/
 ├── ship-class.js # Ship class implementation
 ├── gameboard-class.js # Gameboard logic
 └── player-class.js # Player class extending Gameboard
+
+## Improvements
+- Add manual ship placement
+- Add player vs player functionality
+- better computer intelligence, having the computer select adjacent slots when it gets a 'hit'
